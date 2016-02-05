@@ -2,6 +2,13 @@
     "minimum-stability":"dev",
     "require": {
         "slim/slim": "^3.0",
-        "vrana/notorm": "dev-master"
-    }
+        "vrana/notorm": "dev-master",
+        "palanik/corsslim":"dev-slim3"
+    },
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/palanik/CorsSlim.git"
+        }
+    ]
 }
