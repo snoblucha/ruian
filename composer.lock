@@ -5,7 +5,6 @@
         "This file is @generated automatically"
     ],
     "hash": "af25d8c6581ef9095a3aeb9b3a5a9e9d",
-    "content-hash": "9d7b5d6e91a0de4c4413c840aa76f9aa",
     "packages": [
         {
             "name": "container-interop/container-interop",
@@ -228,12 +227,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/slimphp/Slim.git",
-                "reference": "15bf89cc6a00a59a88499608a9c4e193cfcc78aa"
+                "reference": "9cc105d628f9cf85434225db41e092107f69ad15"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/slimphp/Slim/zipball/15bf89cc6a00a59a88499608a9c4e193cfcc78aa",
-                "reference": "15bf89cc6a00a59a88499608a9c4e193cfcc78aa",
+                "url": "https://api.github.com/repos/slimphp/Slim/zipball/9cc105d628f9cf85434225db41e092107f69ad15",
+                "reference": "9cc105d628f9cf85434225db41e092107f69ad15",
                 "shasum": ""
             },
             "require": {
@@ -287,7 +286,7 @@
                 "micro",
                 "router"
             ],
-            "time": "2016-02-05 09:30:28"
+            "time": "2016-02-06 14:12:14"
         },
         {
             "name": "vrana/notorm",

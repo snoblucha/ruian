@@ -28,5 +28,5 @@ done < ${SEZNAM}
 mysql -u ${USER} -p${PASSWORD} ${DB} < ruian_transform.sql
 
 rm ${SEZNAM};
-rm -rf ${CESTA_K_CSV}
+#rm -rf ${CESTA_K_CSV}
 exit;

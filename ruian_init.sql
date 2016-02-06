@@ -1,11 +1,11 @@
 DROP TABLE IF EXISTS `ruian_adresy`;
 CREATE TABLE `ruian_adresy` (
-  `kod_adm` int(11) NOT NULL,
-  `kod_obce` int(11) NOT NULL,
+  `id` int(11) NOT NULL,
+  `obec_id` int(11) NOT NULL,
   `nazev_obce` varchar(64) NOT NULL,
   `nazev_momc` varchar(64) NOT NULL,
   `nazev_mop` varchar(64) NOT NULL,
-  `kod_casti_obce` int(11) NOT NULL,
+  `casti_obce_id` int(11) NOT NULL,
   `nazev_casti_obce` varchar(64) NOT NULL,
   `nazev_ulice` varchar(64) NOT NULL,
   `typ_so` varchar(16) NOT NULL,

@@ -1,11 +1,13 @@
 DROP TABLE IF EXISTS ruian_obce;
 
 CREATE TABLE ruian_obce
-SELECT kod_obce,nazev_obce
-FROM `ruian_adresy`
-GROUP BY kod_obce;
+  SELECT
+    obec_id as id,
+    nazev_obce as nazev
+  FROM `ruian_adresy`
+  GROUP BY obec_id;
 
-ALTER TABLE `ruian_obce` ADD PRIMARY KEY `kod_obce` (`kod_obce`);
+ALTER TABLE `ruian_obce` ADD PRIMARY KEY `id` (`id`);
 
 
 ALTER TABLE `ruian_adresy` DROP `nazev_obce`;
@@ -13,18 +15,42 @@ ALTER TABLE `ruian_adresy` DROP `nazev_obce`;
 DROP TABLE IF EXISTS ruian_casti_obce;
 
 CREATE TABLE ruian_casti_obce
-SELECT kod_obce,kod_casti_obce,nazev_casti_obce,psc,nazev_momc,nazev_mop
-FROM `ruian_adresy` GROUP BY kod_casti_obce;
+  SELECT
+    casti_obce_id as id,
+    obec_id as obec_id,
+    nazev_casti_obce as nazev,
+    psc,
+    nazev_momc,
+    nazev_mop
+  FROM `ruian_adresy`
+  GROUP BY casti_obce_id;
 
-UPDATE `ruian_adresy` SET nazev_ulice=nazev_casti_obce WHERE NOT nazev_ulice;
+UPDATE `ruian_adresy`
+SET nazev_ulice = nazev_casti_obce
+WHERE nazev_ulice = '';
 
 ALTER TABLE `ruian_adresy` DROP `nazev_casti_obce`, DROP `psc`, DROP `nazev_momc`, DROP `nazev_mop`;
 
 
 ALTER TABLE `ruian_casti_obce`
-ADD PRIMARY KEY `kod_casti_obce` (`kod_casti_obce`),
-ADD INDEX `kod_obce` (`kod_obce`);
+ADD PRIMARY KEY `id` (`id`),
+ADD INDEX `obec_id` (`obec_id`);
 
 ALTER TABLE `ruian_adresy`
-ADD INDEX `kod_casti_obce` (`kod_casti_obce`),
-ADD INDEX `kod_obce` (`kod_obce`);
+ADD INDEX `casti_obce_id` (`casti_obce_id`),
+ADD INDEX `obec_id` (`obec_id`);
+
+DROP TABLE IF EXISTS ruian_ulice;
+CREATE TABLE ruian_ulice
+  SELECT
+    casti_obce_id,
+    obec_id,
+    nazev_ulice
+  FROM `ruian_adresy`
+  GROUP BY obec_id, nazev_ulice;
+
+ALTER TABLE `ruian_ulice`
+ADD INDEX `casti_obce_id` (`casti_obce_id`),
+ADD INDEX `obec_id` (`obec_id`);
+
+
