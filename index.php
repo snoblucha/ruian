@@ -13,8 +13,9 @@
 
 
 require 'vendor/autoload.php';
+require 'config.php';
 
-$connection = new PDO("mysql:dbname=ruian;charset=utf8", 'ruian', 'ruian');
+$connection = new PDO("mysql:dbname=".DB_DATABASE.";host=".DB_HOST.";charset=utf8", DB_USER, DB_PASSWORD);
 $db = new NotORM($connection);
 
 $container = new \Slim\Container();
@@ -189,7 +190,7 @@ $app->get('/obce', function (\Psr\Http\Message\RequestInterface $request, \Psr\H
     $obce = apply_search($obce,$request,'nazev');
 
     foreach ($obce as $obec) {
-        $res[] = array('id' => $obec['obec_id'], 'nazev' => $obec['nazev']);
+        $res[] = array('id' => $obec['id'], 'nazev' => $obec['nazev']);
     }
     return $response->withJson($res);
 
@@ -199,12 +200,37 @@ $app->get('/obec/{id}', function (\Psr\Http\Message\RequestInterface $request, \
 
     $db = $this->get('db');
     $res = array();
-    foreach ($db->ruian_obce()->where('obec_id', $args['id']) as $obec) {
-        $res[] = array('id' => $obec['obec_id'], 'nazev' => $obec['nazev']);
+    $obec = $db->ruian_obce[$args['id']];
+    if(!$obec){
+        return $response->withStatus('404');
     }
-    return $response->withJson($res);
 
+    return $response->withJson($obec);
 });
+$app->get('/cast_obce/{id}', function (\Psr\Http\Message\RequestInterface $request, \Psr\Http\Message\ResponseInterface $response, $args) {
+
+    $db = $this->get('db');
+    $res = array();
+    $obec = $db->ruian_casti_obce[$args['id']];
+    if(!$obec){
+        return $response->withStatus('404');
+    }
+
+    return $response->withJson($obec);
+});
+
+$app->get('/adresa/{id}', function (\Psr\Http\Message\RequestInterface $request, \Psr\Http\Message\ResponseInterface $response, $args) {
+
+    $db = $this->get('db');
+    $res = array();
+    $adresa = $db->ruian_adresy[$args['id']];
+    if(!$adresa){
+        return $response->withStatus('404');
+    }
+
+    return $response->withJson(adr_to_arr($adresa,true));
+});
+
 $app->get('/adresy/{id}', function (\Psr\Http\Message\RequestInterface $request, \Psr\Http\Message\ResponseInterface $response, $args) {
 
     $db = $this->get('db');
