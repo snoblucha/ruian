@@ -183,7 +183,7 @@ $app->get('/obce', function (\Psr\Http\Message\RequestInterface $request, \Psr\H
     /**
      * @var \Slim\Http\Response $response
      */
-    $db = $this->get('db');
+    $db = $this->db;
     $res = array();
     $obce = $db->ruian_obce();
     $obce = apply_limit($obce,$request);
@@ -198,7 +198,7 @@ $app->get('/obce', function (\Psr\Http\Message\RequestInterface $request, \Psr\H
 
 $app->get('/obec/{id}', function (\Psr\Http\Message\RequestInterface $request, \Psr\Http\Message\ResponseInterface $response, $args) {
 
-    $db = $this->get('db');
+    $db = $this->db;
     $res = array();
     $obec = $db->ruian_obce[$args['id']];
     if(!$obec){
@@ -209,7 +209,7 @@ $app->get('/obec/{id}', function (\Psr\Http\Message\RequestInterface $request, \
 });
 $app->get('/cast_obce/{id}', function (\Psr\Http\Message\RequestInterface $request, \Psr\Http\Message\ResponseInterface $response, $args) {
 
-    $db = $this->get('db');
+    $db = $this->db;
     $res = array();
     $obec = $db->ruian_casti_obce[$args['id']];
     if(!$obec){
@@ -221,7 +221,7 @@ $app->get('/cast_obce/{id}', function (\Psr\Http\Message\RequestInterface $reque
 
 $app->get('/adresa/{id}', function (\Psr\Http\Message\RequestInterface $request, \Psr\Http\Message\ResponseInterface $response, $args) {
 
-    $db = $this->get('db');
+    $db = $this->db;
     $res = array();
     $adresa = $db->ruian_adresy[$args['id']];
     if(!$adresa){
@@ -233,7 +233,7 @@ $app->get('/adresa/{id}', function (\Psr\Http\Message\RequestInterface $request,
 
 $app->get('/adresy/{id}', function (\Psr\Http\Message\RequestInterface $request, \Psr\Http\Message\ResponseInterface $response, $args) {
 
-    $db = $this->get('db');
+    $db = $this->db;
     $res = array();
 
     $adresy = $db->ruian_adresy()->where('obec_id', $args['id']);
@@ -249,7 +249,7 @@ $app->get('/adresy/{id}', function (\Psr\Http\Message\RequestInterface $request,
 });
 $app->get('/casti_obce/{id}', function (\Psr\Http\Message\RequestInterface $request, \Psr\Http\Message\ResponseInterface $response, $args) {
 
-    $db = $this->get('db');
+    $db = $this->db;
     $res = array();
 
     $casti = $db->ruian_casti_obci()->where('obec_id', $args['id']);
@@ -269,7 +269,7 @@ $app->get('/casti_obce/{id}', function (\Psr\Http\Message\RequestInterface $requ
  */
 $app->get('/najit', function (\Psr\Http\Message\RequestInterface $request, \Psr\Http\Message\ResponseInterface $response, $args) {
 
-    $db = $this->get('db');
+    $db = $this->db;
     $res = array();
     $mesto = $request->getParam('o');
     $obec_id = $request->getParam('oid');
