@@ -38,7 +38,8 @@ ADD INDEX `obec_id` (`obec_id`);
 
 ALTER TABLE `ruian_adresy`
 ADD INDEX `casti_obce_id` (`casti_obce_id`),
-ADD INDEX `obec_id` (`obec_id`);
+ADD INDEX `obec_id` (`obec_id`),
+ADD INDEX `nazev_ulice` (`nazev_ulice`(4));
 
 DROP TABLE IF EXISTS ruian_ulice;
 CREATE TABLE ruian_ulice

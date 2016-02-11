@@ -15,7 +15,8 @@ CREATE TABLE `ruian_adresy` (
   `psc` mediumint(9) NOT NULL,
   `souradnice_y` decimal(12,2) NOT NULL,
   `souradnice_x` decimal(12,2) NOT NULL,
-  `plati_od` datetime NOT NULL
+  `plati_od` datetime NOT NULL,
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB;
 
 
