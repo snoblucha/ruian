@@ -19,4 +19,21 @@ CREATE TABLE `ruian_adresy` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB;
 
+#ADM_KOD;ULICE_KOD;COBCE_KOD;MOMC_KOD;MOP_KOD;SPRAVOBV_KOD;OBEC_KOD;POU_KOD;ORP_KOD;VUSC_KOD;VO_KOD
+CREATE TABLE `ruian_adresy_vazby` (
+  `adresa_id` INT(11) NOT NULL,
+  `ulice_id` INT(11) NOT NULL,
+  `cast_obce_id` INT(11) NOT NULL,
+  `mestsky_obvod_id` INT(11) NOT NULL,
+  `mestsky_obvod_praha_id` INT(11) NOT NULL,
+  `sprav_obec_id` INT(11) NOT NULL,
+  `obec_id` INT(11) NOT NULL,
+  `pou_id` INT(11) NOT NULL,
+  `orp_id` INT(11) NOT NULL,
+  `vusc_id` INT(11) NOT NULL,
+  `vo_id` INT(11) NOT NULL
+)
+
+
+
 
