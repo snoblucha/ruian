@@ -28,21 +28,12 @@ echo "Importuji soubry do databaze"
 while read line; do
         mysql -u ${USER} -p${PASSWORD} --local_infile=1 ${DB} -e "LOAD DATA LOCAL INFILE '$line' INTO TABLE $TABLE CHARACTER SET cp1250 FIELDS TERMINATED BY ';' IGNORE 1 LINES"
 done < ${SEZNAM}
-echo "hotovo."
-
-echo "Stahuji strukturu..."
-wget "http://vdp.cuzk.cz/vymenny_format/csv/$NAME_STRUKT"
-unzip ${NAME_STRUKT}
-rm ${NAME_STRUKT}
-
-mysql -u ${USER} -p${PASSWORD} --local_infile=1 ${DB} -e "LOAD DATA LOCAL INFILE '${CESTA_K_CSV_STRUKT}/adresni-mista-vazby-cr.csv' INTO TABLE $TABLE CHARACTER SET cp1250 FIELDS TERMINATED BY ';' IGNORE 1 LINES"
-
-
+echo "... hotovo."
 
 
 echo "Aplikuji transformace na databazi..."
 mysql -u ${USER} -p${PASSWORD} ${DB} < ruian_transform.sql
-echo "Hotovo"
+echo "... hotovo"
 
 
 rm ${SEZNAM};
