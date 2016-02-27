@@ -187,6 +187,10 @@ function adr_to_arr($adr, $full = false)
         'gps' => toGPS($adr['souradnice_x'], $adr['souradnice_y']),
     );
 
+    if($adr['obec']){
+        $res['obec'] = $adr['obec'];
+    }
+
     if ($full) {
         $obec = $db->ruian_obce[$res['obec_id']];
         $res['obec'] = ['id' => $obec['id'], 'nazev' => $obec['nazev']];
@@ -256,6 +260,7 @@ $app->get('/adresy/{id}', function (\Psr\Http\Message\RequestInterface $request,
 
     $db = $this->db;
     $res = array();
+    $obec = $db->ruian_obce[$args['id']];
 
     $adresy = $db->ruian_adresy()->where('obec_id', $args['id']);
     $adresy = apply_limit($adresy, $request);
@@ -264,6 +269,7 @@ $app->get('/adresy/{id}', function (\Psr\Http\Message\RequestInterface $request,
 
 
     foreach ($adresy as $adr) {
+        $adr['obec'] = $obec['nazev'];
         $res[] = adr_to_arr($adr);
     }
 
