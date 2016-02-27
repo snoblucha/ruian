@@ -273,6 +273,8 @@ $app->get('/adresy/{id}', function (\Psr\Http\Message\RequestInterface $request,
         $res[] = adr_to_arr($adr);
     }
 
+
+
     return $response->withJson($res);
 
 });
