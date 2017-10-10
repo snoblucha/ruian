@@ -3,7 +3,8 @@
     "require": {
         "slim/slim": "^3.0",
         "vrana/notorm": "dev-master",
-        "palanik/corsslim":"dev-slim3"
+        "palanik/corsslim":"dev-slim3",
+        "slim/php-view": "^2.2"
     },
     "repositories": [
         {

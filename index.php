@@ -5,15 +5,19 @@
  * /obec/{id_obce}
  * /hledej_obec?q={obec}
  * /casti_obce/{id_obce}
- * /ulice/{id_obce}[?q={ulice}]
+ * /adresy/{id_obce}
+ * /obec/{id_obce}/adresy
  * /adresa/{id_adresy}
  * /adresy_obce/{id_obce}[?limit=&offset=]
  * /adresy_casti_obce/{id_cast_obce}[?limit=&offset=]
+ * /ruians?q=comma_separated_string
  */
 
 
 require 'vendor/autoload.php';
 require 'config.php';
+
+use Slim\Views\PhpRenderer;
 
 $connection = new PDO("mysql:dbname=" . DB_DATABASE . ";host=" . DB_HOST . ";charset=utf8", DB_USER, DB_PASSWORD);
 $db = new NotORM($connection);
@@ -23,6 +27,8 @@ $app = new \Slim\App($container);
 $container['db'] = $db;
 
 $app->add(new \CorsSlim\CorsSlim());
+$container = $app->getContainer();
+$container['renderer'] = new PhpRenderer("./templates");
 
 function apply_limit($obj, $request)
 {
@@ -60,6 +66,16 @@ function casti_obce($db, $obec_id)
     return $res;
 }
 
+function cast_to_arr($cast)
+{
+    return ['id' => $cast['id'], 'obec_id' => $cast['obec_id'], 'nazev' => $cast['nazev'], 'psc' => $cast['psc'], 'mo' => $cast['nazev_momc'], 'mop' => $cast['nazev_mop']];
+}
+
+function obec_to_arr($obec, $casti = null)
+{
+    return array('id' => $obec['id'], 'nazev' => $obec['nazev'], 'casti' => $casti);
+}
+
 /**
  * @param $x
  * @param $y
@@ -79,7 +95,7 @@ function toGPS($x, $y, $H = 200)
     $cosVQ = 0.907424504992097;
     $alfa = 1.000597498371542;
     $k = 1.003419163966575;
-    $ro = max(sqrt($x * $x + $y * $y),0.01);
+    $ro = max(sqrt($x * $x + $y * $y), 0.01);
     $epsilon = 2 * atan($y / ($ro + $x));
     $D = $epsilon / $n;
     $S = 2 * atan(exp(1 / $n * log($konst_u_ro / $ro))) - M_PI_2;
@@ -100,10 +116,7 @@ function toGPS($x, $y, $H = 200)
         $pom = ($pom - 1) / ($pom + 1);
     } while (abs($pom - $sinB) > 0.000000000000001);
     $Bjtsk = atan($pom / sqrt(1 - $pom * $pom));
-
-
     /* Pravoúhlé souřadnice ve S-JTSK */
-
     $a = 6377397.15508;
     $f_1 = 299.152812853;
     $e2 = 1 - (1 - 1 / $f_1) * (1 - 1 / $f_1);
@@ -135,21 +148,10 @@ function toGPS($x, $y, $H = 200)
     $t = ($zn + $e2 * $a_b * $a * $st * $st * $st) / ($p - $e2 * $a * $ct * $ct * $ct);
     $B = atan($t);
     $L = 2 * atan($yn / ($p + $xn));
-    $H = sqrt(1 + $t * $t) * ($p - $a / sqrt(1 + (1 - $e2) * $t * $t));
-
-    /* Formát výstupních hodnot */
     $B = $B / M_PI * 180;
-    //$sirka="N";
     if ($B < 0) {
         $B = -$B;
-        //$sirka="S";
     }
-    /*$stsirky=floor($B);
-    $B=($B-$stsirky)*60;
-    $minsirky=floor($B);
-    $B=($B-$minsirky)*60;
-    $vtsirky=round($B*1000)/1000;
-    //$sirka=$sirka+$stsirky+"°"+$minsirky+"'"+$vtsirky;*/
     $gps = array();
     $gps['lat'] = $B;
 
@@ -159,12 +161,6 @@ function toGPS($x, $y, $H = 200)
         $L = -$L;
         //$delka="W";
     }
-    /*$stdelky=floor($L);
-    $L=($L-$stdelky)*60;
-    $mindelky=floor($L);
-    $L=($L-$mindelky)*60;
-    $vtdelky=round($L*1000)/1000;
-    //$delka=$delka+$stdelky+"°"+$mindelky+"'"+$vtdelky;*/
     $gps['lng'] = $L;
 
     return $gps;
@@ -187,14 +183,14 @@ function adr_to_arr($adr, $full = false)
         'gps' => toGPS($adr['souradnice_x'], $adr['souradnice_y']),
     );
 
-    if($adr['obec']){
+    if ($adr['obec']) {
         $res['obec'] = $adr['obec'];
     }
 
     if ($full) {
         $obec = $db->ruian_obce[$res['obec_id']];
         $res['obec'] = ['id' => $obec['id'], 'nazev' => $obec['nazev']];
-        $cast = $db->ruian_casti_obce[$res['casti_obce_id']];
+        $cast = $db->ruian_casti_obce[$res['fi_obce_id']];
         $res['cast_obce'] = ['id' => $cast['id'], 'nazev' => $cast['nazev'], 'psc' => $cast['psc'], 'mop' => $cast['nazev_mop'], 'mo' => $cast['nazev_momc']];
     }
 
@@ -214,7 +210,7 @@ $app->get('/obce', function (\Psr\Http\Message\RequestInterface $request, \Psr\H
 
     foreach ($obce as $obec) {
         $casti = casti_obce($db, $obec['id']);
-        $res[] = array('id' => $obec['id'], 'nazev' => $obec['nazev'], 'casti' => $casti);
+        $res[] = obec_to_arr($obec, $casti);
 
     }
     return $response->withJson($res);
@@ -267,17 +263,13 @@ $app->get('/adresy/{id}', function (\Psr\Http\Message\RequestInterface $request,
     $adresy = apply_search($adresy, $request, 'nazev_ulice');
     $adresy = apply_field($adresy, $request, 'casti_obce_id');
 
-
     foreach ($adresy as $adr) {
         $adr['obec'] = $obec['nazev'];
         $res[] = adr_to_arr($adr);
     }
-
-
-
     return $response->withJson($res);
-
 });
+
 $app->get('/casti_obce/{id}', function (\Psr\Http\Message\RequestInterface $request, \Psr\Http\Message\ResponseInterface $response, $args) {
 
     $db = $this->db;
@@ -288,7 +280,7 @@ $app->get('/casti_obce/{id}', function (\Psr\Http\Message\RequestInterface $requ
     $casti = apply_search($casti, $request, 'nazev');
 
     foreach ($casti as $cast) {
-        $res[] = ['id' => $cast['id'], 'obec_id' => $cast['obec_id'], 'nazev' => $cast['nazev'], 'psc' => $cast['psc'], 'mo' => $cast['nazev_momc'], 'mop' => $cast['nazev_mop']];
+        $res[] = cast_to_arr($cast);
     }
 
     return $response->withJson($res);
@@ -341,14 +333,34 @@ $app->get('/najit', function (\Psr\Http\Message\RequestInterface $request, \Psr\
         $adresy = $adresy->where('znak_cisla_orientacniho=?', $znak);
     }
 
-
     foreach ($adresy as $adr) {
         $res[] = adr_to_arr($adr, true);
     }
 
     return $response->withJson($res);
-
 });
 
+$app->get('/ruians', function (\Psr\Http\Message\RequestInterface $request, \Psr\Http\Message\ResponseInterface $response, $args) {
+    $db = $this->db;
+    $res = [];
+    $ruians = array_map('trim', explode(',', $request->getParam('q')));
+
+    foreach ($db->ruian_obce()->where('id', $ruians) as $obec) {
+        $res[$obec['id']] = ['typ' => 'obec'] + obec_to_arr($obec);
+    }
+    foreach ($db->ruian_casti_obce()->where('id', $ruians) as $cast_obce) {
+        $res[$cast_obce['id']] = ['typ' => 'cast_obce'] + cast_to_arr($cast_obce);
+    }
+
+    foreach ($db->ruian_adresy()->where('id', $ruians) as $adresa) {
+        $res[$adresa['id']] = ['typ' => 'adresa'] + adr_to_arr($adresa, true);
+    }
+
+    return $response->withJson($res);
+});
+
+$app->get('/', function (\Psr\Http\Message\RequestInterface $request, \Psr\Http\Message\ResponseInterface $response, $args) {
+    return $this->renderer->render($response, "/index.php", $args);
+});
 
 $app->run();
