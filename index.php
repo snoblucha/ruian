@@ -190,7 +190,7 @@ function adr_to_arr($adr, $full = false)
     if ($full) {
         $obec = $db->ruian_obce[$res['obec_id']];
         $res['obec'] = ['id' => $obec['id'], 'nazev' => $obec['nazev']];
-        $cast = $db->ruian_casti_obce[$res['fi_obce_id']];
+        $cast = $db->ruian_casti_obce[$res['casti_obce_id']];
         $res['cast_obce'] = ['id' => $cast['id'], 'nazev' => $cast['nazev'], 'psc' => $cast['psc'], 'mop' => $cast['nazev_mop'], 'mo' => $cast['nazev_momc']];
     }
 
@@ -340,19 +340,26 @@ $app->get('/najit', function (\Psr\Http\Message\RequestInterface $request, \Psr\
     return $response->withJson($res);
 });
 
+/**
+ * ruians - M: Mesto, MC: mestska cast, bez adresa
+ */
 $app->get('/ruians', function (\Psr\Http\Message\RequestInterface $request, \Psr\Http\Message\ResponseInterface $response, $args) {
     $db = $this->db;
     $res = [];
     $ruians = array_map('trim', explode(',', $request->getParam('q')));
 
-    foreach ($db->ruian_obce()->where('id', $ruians) as $obec) {
-        $res[$obec['id']] = ['typ' => 'obec'] + obec_to_arr($obec);
-    }
-    foreach ($db->ruian_casti_obce()->where('id', $ruians) as $cast_obce) {
-        $res[$cast_obce['id']] = ['typ' => 'cast_obce'] + cast_to_arr($cast_obce);
-    }
 
-    foreach ($db->ruian_adresy()->where('id', $ruians) as $adresa) {
+    $mesta = array_map(function($item){ return str_replace('M:','',$item);}, array_filter($ruians, function($item){return preg_match('/^M:\d+/',$item);}));
+    foreach ($db->ruian_obce()->where('id', $mesta) as $obec) {
+        $res['M:'.$obec['id']] = ['typ' => 'obec'] + obec_to_arr($obec);
+    }
+    $casti_obce = array_map(function($item){ return str_replace('MC:','',$item);},array_filter($ruians, function($item){ return preg_match('/^MC:/',$item);}));
+
+    foreach ($db->ruian_casti_obce()->where('id', $casti_obce) as $cast_obce) {
+        $res['MC:'.$cast_obce['id']] = ['typ' => 'cast_obce'] + cast_to_arr($cast_obce);
+    }
+    $adresy = array_filter($ruians, function($item){ return !preg_match('/^MC?:/', $item);});
+    foreach ($db->ruian_adresy()->where('id', $adresy) as $adresa) {
         $res[$adresa['id']] = ['typ' => 'adresa'] + adr_to_arr($adresa, true);
     }
 

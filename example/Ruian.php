@@ -18,8 +18,6 @@ class Ruian
     public function __construct($url )
     {
         $this->url = $url;
-
-
     }
 
     /**
@@ -70,5 +68,4 @@ class Ruian
         }
         return $this->query("najit?" . http_build_query($query));
     }
-
 }
