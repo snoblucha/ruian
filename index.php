@@ -12,6 +12,8 @@
  * /adresy_casti_obce/{id_cast_obce}[?limit=&offset=]
  * /ruians?q=comma_separated_string
  * /search?q=street number,city
+ * /detail/{ruian}
+ *
  */
 
 
@@ -253,6 +255,19 @@ $app->get('/adresa/{id}', function (\Psr\Http\Message\RequestInterface $request,
   return $response->withJson(adr_to_arr($adresa, true));
 });
 
+$app->get('/detail/{id}', function (\Psr\Http\Message\RequestInterface $request, \Psr\Http\Message\ResponseInterface $response, $args) {
+
+  $db = $this->db;
+  $res = array();
+  $adresa = $db->ruian_adresy[$args['id']];
+  if (!$adresa) {
+    return $response->withStatus('404');
+  }
+  $args['adresa'] = adr_to_arr($adresa, true);
+  return $this->renderer->render($response, "/detail.php", $args);
+
+});
+
 $app->get('/adresy/{id}', function (\Psr\Http\Message\RequestInterface $request, \Psr\Http\Message\ResponseInterface $response, $args) {
 
   $db = $this->db;
@@ -369,8 +384,6 @@ $app->get('/search', function (\Psr\Http\Message\RequestInterface $request, \Psr
     }
     $adresy = $adresy->where('obec_id', $id_obci);
   }
-
-
 
   if ($ulice) {
     $adresy = $adresy->where('nazev_ulice LIKE ?', "$ulice%");
