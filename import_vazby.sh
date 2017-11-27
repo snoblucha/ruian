@@ -1,7 +1,7 @@
 #!/bin/bash
 
 
-NAME_STRUKT="20160131_strukt_ADR.csv.zip"
+NAME_STRUKT="20171031_strukt_ADR.csv.zip"
 
 CESTA_K_CSV_STRUKT="./strukturovane-CSV"  ## cesta, kde se rozbalil archiv struktury
 SEZNAM="/tmp/seznam.txt"     ## může zůstat přednastaveno, je to jen dočasný soubor
