@@ -1,3 +1,4 @@
+SET sql_mode = '';
 DROP TABLE IF EXISTS ruian_obce;
 
 CREATE TABLE ruian_obce
@@ -39,19 +40,22 @@ ADD INDEX `obec_id` (`obec_id`);
 ALTER TABLE `ruian_adresy`
 ADD INDEX `casti_obce_id` (`casti_obce_id`),
 ADD INDEX `obec_id` (`obec_id`),
-ADD INDEX `nazev_ulice` (`nazev_ulice`(4));
+ADD INDEX `nazev_ulice` (`nazev_ulice`(4)),
+ADD INDEX `ulice_id` (`ulice_id`);
 
 DROP TABLE IF EXISTS ruian_ulice;
 CREATE TABLE ruian_ulice
   SELECT
+    ulice_id AS id,
     casti_obce_id,
     obec_id,
     nazev_ulice
   FROM `ruian_adresy`
   GROUP BY obec_id, nazev_ulice;
 
+DELETE FROM ruian_ulice WHERE id=0;
+
 ALTER TABLE `ruian_ulice`
+ADD PRIMARY KEY `id` (`id`),
 ADD INDEX `casti_obce_id` (`casti_obce_id`),
 ADD INDEX `obec_id` (`obec_id`);
-
-

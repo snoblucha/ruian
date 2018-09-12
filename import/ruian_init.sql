@@ -3,10 +3,13 @@ CREATE TABLE `ruian_adresy` (
   `id`                      INT(11)        NOT NULL,
   `obec_id`                 INT(11)        NOT NULL,
   `nazev_obce`              VARCHAR(64)    NOT NULL,
+  `momc_id`                 INT(11)    NOT NULL,
   `nazev_momc`              VARCHAR(64)    NOT NULL,
+  `mop_id`                  INT(11)    NOT NULL,
   `nazev_mop`               VARCHAR(64)    NOT NULL,
   `casti_obce_id`           INT(11)        NOT NULL,
   `nazev_casti_obce`        VARCHAR(64)    NOT NULL,
+  `ulice_id`                INT(11)    NOT NULL,
   `nazev_ulice`             VARCHAR(64)    NOT NULL,
   `typ_so`                  VARCHAR(16)    NOT NULL,
   `cislo_domovni`           INT(11)        NOT NULL,
@@ -19,4 +22,3 @@ CREATE TABLE `ruian_adresy` (
   PRIMARY KEY (`id`)
 )
   ENGINE = InnoDB;
-
