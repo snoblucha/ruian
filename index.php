@@ -74,6 +74,11 @@ function cast_to_arr($cast)
   return ['id' => $cast['id'], 'obec_id' => $cast['obec_id'], 'nazev' => $cast['nazev'], 'psc' => $cast['psc'], 'mo' => $cast['nazev_momc'], 'mop' => $cast['nazev_mop']];
 }
 
+function ulice_to_arr($ulice)
+{
+  return ['id' => $ulice['id'], 'obec_id' => $ulice['obec_id'], 'nazev_ulice' => $ulice['nazev_ulice']];
+}
+
 function obec_to_arr($obec, $casti = null)
 {
   return array('id' => $obec['id'], 'nazev' => $obec['nazev'], 'casti' => $casti);
@@ -177,6 +182,7 @@ function adr_to_arr($adr, $full = false)
     'obec_id' => $adr['obec_id'],
     'casti_obce_id' => $adr['casti_obce_id'],
     'ulice' => $adr['nazev_ulice'],
+    'ulice_id' => $adr['ulice_id'],
     'typ_so' => $adr['typ_so'],
     'cp' => $adr['cislo_domovni'],
     'co' => $adr['cislo_orientacni'],
@@ -278,6 +284,7 @@ $app->get('/adresy/{id}', function (\Psr\Http\Message\RequestInterface $request,
   $adresy = apply_limit($adresy, $request);
   $adresy = apply_search($adresy, $request, 'nazev_ulice');
   $adresy = apply_field($adresy, $request, 'casti_obce_id');
+  $adresy = apply_field($adresy, $request, 'ulice_id');
 
   foreach ($adresy as $adr) {
     $adr['obec'] = $obec['nazev'];
@@ -297,6 +304,24 @@ $app->get('/casti_obce/{id}', function (\Psr\Http\Message\RequestInterface $requ
 
   foreach ($casti as $cast) {
     $res[] = cast_to_arr($cast);
+  }
+
+  return $response->withJson($res);
+
+});
+
+$app->get('/ulice/{id}', function (\Psr\Http\Message\RequestInterface $request, \Psr\Http\Message\ResponseInterface $response, $args) {
+
+  $db = $this->db;
+  $res = array();
+
+  $ulice = $db->ruian_ulice()->where('obec_id', $args['id']);
+  $ulice = apply_field($ulice, $request, 'casti_obce_id');
+  $ulice = apply_limit($ulice, $request);
+  $ulice = apply_search($ulice, $request, 'nazev');
+
+  foreach ($ulice as $ulice) {
+    $res[] = ulice_to_arr($ulice);
   }
 
   return $response->withJson($res);
@@ -328,7 +353,6 @@ $app->get('/najit', function (\Psr\Http\Message\RequestInterface $request, \Psr\
     foreach ($mesta as $row) {
       $id_obci[] = $row['id'];
     }
-
   } else {
     $id_obci = [$obec_id];
   }
