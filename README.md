@@ -91,7 +91,7 @@ Příklad
     
 ## Demo klienta - vyhledávací pole
 
-https://github.com/snoblucha/ruian
+https://codepen.io/snoblucha/pen/GeaNEY
 
         
 
