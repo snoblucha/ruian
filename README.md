@@ -89,7 +89,9 @@ Příklad
 `{"id":"195189","obec_id":"574686","nazev":"\u017d\u010f\u00e1r nad Metuj\u00ed","psc":"54955","nazev_momc":"","nazev_mop":""}`
 
     
-    
+## Demo klienta - vyhledávací pole
+
+https://github.com/snoblucha/ruian
 
         
 
