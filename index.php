@@ -410,7 +410,7 @@ $app->get('/search', function (\Psr\Http\Message\RequestInterface $request, \Psr
   }
 
   if ($ulice) {
-    $adresy = $adresy->where('nazev_ulice LIKE ?', "%$ulice%");
+    $adresy = $adresy->where('nazev_ulice LIKE ?', "$ulice%");
   }
   if ($cp) {
     $adresy = $adresy->where('cislo_domovni LIKE ?', "$cp%");
