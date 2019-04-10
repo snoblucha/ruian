@@ -393,7 +393,7 @@ $app->get('/search', function (\Psr\Http\Message\RequestInterface $request, \Psr
   $co = '';
 
   //Cislo orientacni muze mit i znak
-  if (preg_match('/^([^\d]*)(?: *(\d+)(?:\/?(\d+)?(.*)?))?$/', $street, $results)) {
+  if (preg_match('/^(((?:\d+)?[^\d]*)(?: *(\d+)(?:\/?(\d+)?(.*)?))?$/', $street, $results)) {
     $ulice = trim($results[1]);
     $cp = trim($results[2]);
     $co = trim($results[3]);
