@@ -21,4 +21,5 @@ CREATE TABLE `ruian_adresy` (
   `plati_od`                DATETIME       NOT NULL,
   PRIMARY KEY (`id`)
 )
-  ENGINE = InnoDB;
+  ENGINE = InnoDB
+  CHARSET=utf8mb4;

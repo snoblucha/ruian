@@ -1,0 +1,32 @@
+name: Create DB dump
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  container-job:
+    runs-on: ubuntu-latest
+    container:
+      image: bash:4.4
+    services:
+      mysql:
+        image: mysql:5
+        env:
+          MYSQL_ROOT_PASSWORD: 1234
+          MYSQL_DATABASE: ruian
+        ports:
+        - 3306:3306
+    steps:
+    - uses: actions/checkout@v1
+    - run: apk add --no-cache curl mysql-client unzip
+    - run: ./import/import_ruian.sh
+      env:
+        DB_USER: root
+        DB_PASSWORD: 1234
+        DB_HOST: mysql
+    - run: mysqldump -h mysql -u root -p 1234 ruian > /tmp/db_dump.sql
+    - uses: actions/upload-artifact@master
+      with:
+        name: db_dump.sql
+        path: /tmp/db_dump.sql
