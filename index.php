@@ -266,7 +266,6 @@ $app->get('/detail/{id}', function (\Psr\Http\Message\RequestInterface $request,
   $db = $this->db;
   $res = array();
   $adresa = $db->ruian_adresy[$args['id']];
-  var_dump($adresa);
 
   if (!$adresa) {
     return $response->withStatus('404');
