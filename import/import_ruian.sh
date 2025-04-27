@@ -31,7 +31,7 @@ find ${CESTA_K_CSV} -type f > ${SEZNAM}
 # import
 echo "Importuji soubry do databaze"
 while read line; do
-        mysql -h${HOST} -P${PORT} -u${USER} -p${PASSWORD} --local_infile=1 ${DB} -e "LOAD DATA LOCAL INFILE '$line' INTO TABLE $TABLE CHARACTER SET cp1250 FIELDS TERMINATED BY ';' IGNORE 1 LINES"
+        mysql -h${HOST} -P${PORT} -u${USER} -p${PASSWORD} --local_infile=1 ${DB} -e "LOAD DATA LOCAL INFILE '$line' INTO TABLE ${TABLE}_tmp CHARACTER SET cp1250 FIELDS TERMINATED BY ';' IGNORE 1 LINES"
 done < ${SEZNAM}
 echo "... hotovo."
 

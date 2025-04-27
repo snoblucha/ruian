@@ -1,35 +1,41 @@
-web:
-  build: .
-  ports:
-    - "8011:80"
-  links:
-    - db
-  volumes:
-    - .:/var/www/html/
-    - ./docker/uploads.ini:/usr/local/etc/php/conf.d/uploads.ini
-    - ./docker/consts.php:/var/www/html/classes/consts.php
-  environment:
-    DB_HOST: db
-    DB_NAME: ruian
-    DB_USER: ruian
-    DB_PASSWORD: ruian
+version: '3.7'
+services:
 
-db:
-  hostname: db
-  image: mysql
-  ports:
-    - "3308:3306"
-  environment:
-    MYSQL_ROOT_PASSWORD: viridiumcz
-    MYSQL_DATABASE: ruian
-    MYSQL_USER: ruian
-    MYSQL_PASSWORD: ruian
-  volumes: 
-    - ~/docker/ruian:/var/lib/mysql
+  web:
+    build: .
+    ports:
+      - "8011:80"
+    links:
+      - db
+    volumes:
+      - .:/var/www/html/
+      - ./docker/uploads.ini:/usr/local/etc/php/conf.d/uploads.ini
+      - ./docker/consts.php:/var/www/html/classes/consts.php
+    environment:
+      DB_HOST: db
+      DB_NAME: ruian
+      DB_USER: ruian
+      DB_PASSWORD: ruian
 
-adminer:
-  image: adminer
-  ports:
-    - "8080:8080"
-  links:
-    - db
+  db:
+    hostname: db
+    image: mysql:5
+    ports:
+      - "3308:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: viridiumcz
+      MYSQL_DATABASE: ruian
+      MYSQL_USER: ruian
+      MYSQL_PASSWORD: ruian
+    volumes:
+      - db:/var/lib/mysql
+
+  adminer:
+    image: adminer
+    ports:
+      - "8088:8080"
+    links:
+      - db
+
+volumes:
+  db:

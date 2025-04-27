@@ -11,7 +11,7 @@ CREATE TABLE `ruian_soudrznosti` (
   `nazev` VARCHAR(64) NOT NULL,
   PRIMARY KEY (`id`)
 )
-  ENGINE = InnoDB;
+  ENGINE = InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 
 INSERT INTO ruian_soudrznosti VALUES
@@ -31,7 +31,7 @@ CREATE TABLE `ruian_kraje` (
   `soudrznost_id` INT(11)     NOT NULL,
   PRIMARY KEY (`id`)
 )
-  ENGINE = InnoDB;
+  ENGINE = InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 INSERT INTO ruian_kraje VALUES
   (19, 'Hlavní město Praha', 19),
@@ -62,7 +62,7 @@ CREATE TABLE `ruian_okresy` (
   PRIMARY KEY (`id`)
 
 )
-  ENGINE = InnoDB;
+  ENGINE = InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 LOAD DATA LOCAL INFILE 'celky/UI_OKRES.csv' INTO TABLE ruian_okresy
 CHARACTER SET cp1250 FIELDS TERMINATED BY ';' IGNORE 1 LINES;
@@ -77,7 +77,7 @@ CREATE TABLE `ruian_vazby_cr` (
   `soudrznost_id`     INT(11) NOT NULL,
   `stat_id`           INT(11) NOT NULL
 )
-  ENGINE = InnoDB;
+  ENGINE = InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 #COBCE_KOD;OBEC_KOD;OKRES_KOD;KRAJ_1960_KOD;STAT_KOD
 CREATE TABLE `ruian_vazby_okresy` (
@@ -87,7 +87,7 @@ CREATE TABLE `ruian_vazby_okresy` (
   `kraj_1960_id` INT(11) NOT NULL,
   `stat_id`      INT(11) NOT NULL
 )
-  ENGINE = InnoDB;
+  ENGINE = InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 #ADM_KOD;ULICE_KOD;COBCE_KOD;MOMC_KOD;MOP_KOD;SPRAVOBV_KOD;OBEC_KOD;POU_KOD;ORP_KOD;VUSC_KOD;VO_KOD
 CREATE TABLE `ruian_adresy_vazby` (
@@ -103,4 +103,4 @@ CREATE TABLE `ruian_adresy_vazby` (
   `vusc_id`                INT(11) NOT NULL,
   `vo_id`                  INT(11) NOT NULL
 )
-  ENGINE = InnoDB;
+  ENGINE = InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

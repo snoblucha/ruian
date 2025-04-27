@@ -1,4 +1,10 @@
 SET sql_mode = '';
+SET CHARACTER SET utf8mb4;
+SET NAMES 'utf8mb4' COLLATE 'utf8mb4_unicode_ci';
+
+DROP TABLE IF EXISTS `ruian_adresy`;
+RENAME TABLE `ruian_adresy_tmp` TO `ruian_adresy`;
+
 DROP TABLE IF EXISTS ruian_obce;
 
 CREATE TABLE ruian_obce
@@ -10,8 +16,7 @@ CREATE TABLE ruian_obce
 
 ALTER TABLE `ruian_obce` ADD PRIMARY KEY `id` (`id`);
 
-
-ALTER TABLE `ruian_adresy` DROP `nazev_obce`;
+# ALTER TABLE `ruian_adresy` DROP `nazev_obce`;
 
 DROP TABLE IF EXISTS ruian_casti_obce;
 
@@ -30,7 +35,7 @@ UPDATE `ruian_adresy`
 SET nazev_ulice = nazev_casti_obce
 WHERE nazev_ulice = '';
 
-ALTER TABLE `ruian_adresy` DROP `nazev_casti_obce`, DROP `psc`, DROP `nazev_momc`, DROP `nazev_mop`;
+# ALTER TABLE `ruian_adresy` DROP `nazev_casti_obce`, DROP `psc`, DROP `nazev_momc`, DROP `nazev_mop`;
 
 
 ALTER TABLE `ruian_casti_obce`

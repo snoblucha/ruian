@@ -23,8 +23,9 @@ require 'config.php';
 use Slim\Views\PhpRenderer;
 
 $connection = new PDO("mysql:dbname=" . DB_DATABASE . ";host=" . DB_HOST . ";charset=utf8", DB_USER, DB_PASSWORD);
+$connection->exec("SET CHARACTER SET 'UTF8'");
+$connection->exec("SET NAMES 'utf8' COLLATE 'utf8_czech_ci'");
 $db = new NotORM($connection);
-
 $container = new \Slim\Container();
 $app = new \Slim\App($container);
 $container['db'] = $db;
@@ -402,30 +403,36 @@ $app->get('/search', function (\Psr\Http\Message\RequestInterface $request, \Psr
   }
   $id_obci = array();
   $adresy = $db->ruian_adresy()->limit(50);
-  if ($mesto) {
-    $mesta = $db->ruian_obce()->where('nazev LIKE ?', "$mesto%");
-    foreach ($mesta as $row) {
-      $id_obci[] = $row['id'];
+  if ($mesto || $ulice) {
+    if ($mesto) {
+      foreach ($db->ruian_obce()->where('nazev LIKE ?', "$mesto%") as $row) {
+        $id_obci[] = $row['id'];
+      }
     }
-    $adresy = $adresy->where('obec_id', $id_obci);
+    if ($id_obci) {
+      $adresy = $adresy->where('obec_id', $id_obci);
+    }
   }
 
   if ($ulice) {
-    $adresy = $adresy->where('nazev_ulice LIKE ?', "$ulice%");
+    $adresy = $adresy->where('nazev_ulice LIKE ? OR nazev_obce LIKE ? OR nazev_casti_obce LIKE ?', "$ulice%", "$ulice%", "$ulice%");
   }
+
   if ($cp) {
     $adresy = $adresy->where('cislo_domovni LIKE ?', "$cp%");
   }
+
   if ($co) {
     $adresy = $adresy->where('cislo_orientacni', $co);
-
   }
   if ($znak) {
     $adresy = $adresy->where('znak_cisla_orientacniho = ?', $znak);
   }
+
   foreach ($adresy as $adr) {
     $res[] = adr_to_arr($adr, true);
   }
+
 
   return $response->withJson($res);
 });

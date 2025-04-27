@@ -1,6 +1,6 @@
-FROM php:5.6-apache
+FROM php:7.4-apache
 RUN apt-get update && apt-get install -y \
-        mysql-client\
+        mariadb-client\
         libzip-dev\
     && docker-php-ext-install -j$(nproc) iconv mysqli\
     && docker-php-ext-install -j$(nproc) pdo_mysql\

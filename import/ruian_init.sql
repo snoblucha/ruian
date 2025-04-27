@@ -1,5 +1,5 @@
-DROP TABLE IF EXISTS `ruian_adresy`;
-CREATE TABLE `ruian_adresy` (
+DROP TABLE IF EXISTS `ruian_adresy_tmp`;
+CREATE TABLE `ruian_adresy_tmp` (
   `id`                      INT(11)        NOT NULL,
   `obec_id`                 INT(11)        NOT NULL,
   `nazev_obce`              VARCHAR(64)    NOT NULL,
@@ -20,5 +20,4 @@ CREATE TABLE `ruian_adresy` (
   `souradnice_x`            DECIMAL(12, 2) NOT NULL,
   `plati_od`                DATETIME       NOT NULL,
   PRIMARY KEY (`id`)
-)
-  ENGINE = InnoDB;
+) ENGINE = InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
