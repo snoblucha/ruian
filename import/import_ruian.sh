@@ -15,11 +15,11 @@ PASSWORD="ruian"        ## heslo do DB
 DB="ruian"                  ## databáze
 TABLE="ruian_adresy"  ## tabulka v DB, kam se budou importovat data
 HOST=127.0.0.1
-PORT=3306
+PORT=3309
 ######################
 
 echo "Stahuji seznam adres..."
-wget "http://vdp.cuzk.cz/vymenny_format/csv/$NAME"
+wget "https://vdp.cuzk.gov.cz/vymenny_format/csv/$NAME"
 unzip ${NAME}
 rm ${NAME}
 

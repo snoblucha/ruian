@@ -73,6 +73,7 @@ CREATE TABLE `ruian_vazby_cr` (
   `obec_id`           INT(11) NOT NULL,
   `poverena_obec_id`  INT(11) NOT NULL,
   `rozsirena_obec_id` INT(11) NOT NULL,
+  `okres_id`          INT(11) NOT NULL,
   `kraj_id`           INT(11) NOT NULL,
   `soudrznost_id`     INT(11) NOT NULL,
   `stat_id`           INT(11) NOT NULL
@@ -89,7 +90,7 @@ CREATE TABLE `ruian_vazby_okresy` (
 )
   ENGINE = InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-#ADM_KOD;ULICE_KOD;COBCE_KOD;MOMC_KOD;MOP_KOD;SPRAVOBV_KOD;OBEC_KOD;POU_KOD;ORP_KOD;VUSC_KOD;VO_KOD
+#ADM_KOD;ULICE_KOD;COBCE_KOD;MOMC_KOD;OP_KOD;SPRAVOBV_KOD;OBEC_KOD;POU_KOD;ORP_KOD;OKRES_KOD;VUSC_KOD;VO_KOD
 CREATE TABLE `ruian_adresy_vazby` (
   `adresa_id`              INT(11) NOT NULL,
   `ulice_id`               INT(11) NOT NULL,
@@ -100,6 +101,7 @@ CREATE TABLE `ruian_adresy_vazby` (
   `obec_id`                INT(11) NOT NULL,
   `pou_id`                 INT(11) NOT NULL,
   `orp_id`                 INT(11) NOT NULL,
+  `okres_id`               INT(11) NOT NULL,
   `vusc_id`                INT(11) NOT NULL,
   `vo_id`                  INT(11) NOT NULL
 )

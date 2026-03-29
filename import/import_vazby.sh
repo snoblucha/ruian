@@ -17,7 +17,7 @@ PORT=3306
 
 
 echo "Stahuji strukturu..."
-wget "http://vdp.cuzk.cz/vymenny_format/csv/$NAME_STRUKT"
+wget "https://vdp.cuzk.gov.cz/vymenny_format/csv/$NAME_STRUKT"
 unzip ${NAME_STRUKT}
 rm ${NAME_STRUKT}
 
