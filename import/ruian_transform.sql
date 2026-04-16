@@ -64,3 +64,7 @@ ALTER TABLE `ruian_ulice`
 ADD PRIMARY KEY `id` (`id`),
 ADD INDEX `casti_obce_id` (`casti_obce_id`),
 ADD INDEX `obec_id` (`obec_id`);
+
+ALTER TABLE ruian_adresy ADD FULLTEXT(nazev_ulice, nazev_obce, nazev_casti_obce);
+CREATE INDEX idx_cislo ON ruian_adresy (cislo_domovni, cislo_orientacni);
+
